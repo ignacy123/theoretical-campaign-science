@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import flask
-from users import blueprint as users_blueprint
-from users import in_user_context, login, logout
+from .users import blueprint as users_blueprint
+from .users import in_user_context, login, logout
 
 app = flask.Flask(__name__)
 app.config['SECRET_KEY'] = 'verysecretkey'
