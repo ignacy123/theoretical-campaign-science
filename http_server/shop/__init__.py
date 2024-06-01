@@ -1,27 +1,12 @@
 #!/usr/bin/env python3
-import flask
+import flask, json
 from .users import blueprint as users_blueprint
-from .users import in_user_context, login, logout
+from .demo import blueprint as demo_blueprint
+from .database import database_setup
 
 app = flask.Flask(__name__)
-app.config['SECRET_KEY'] = 'verysecretkey'
+app.config.from_file('config.json', load=json.load)
+
+database_setup(app)
 app.register_blueprint(users_blueprint)
-
-@app.route("/")
-def main_page():
-    return flask.render_template('main.html')
-
-@app.route("/login/<username>")
-def login_page(username):
-    login(username)
-    return flask.redirect(flask.url_for('hello_user_page'))
-
-@app.route("/logout")
-def logout_page():
-    logout()
-    return flask.redirect(flask.url_for('main_page'))
-
-@app.route("/hello_user")
-@in_user_context
-def hello_user_page():
-    return flask.render_template('hello_user.html')
+app.register_blueprint(demo_blueprint, url_prefix='/test')

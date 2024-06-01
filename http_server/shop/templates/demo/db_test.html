@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Database test</title>
+    </head>
+    <body>
+        <h1 style="text-align: center;">Database test</h1>
+        <p>Number of rows: {{data|length}}</p>
+        <table>
+            <tr>
+                <th>Key</th>
+                <th>Value</th>
+            </tr>
+            {% for k, v in data.items() %}
+            <tr>
+                <td>{{k}}</td>
+                <td>{{v}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </body>
+</html>
