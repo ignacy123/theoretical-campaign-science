@@ -1,3 +1,4 @@
+// the implementation is based on this article https://decentralizedthoughts.github.io/2020-07-26-private-set-intersection-2/
 use std::collections::HashSet;
 use std::hash::Hash;
 use std::ops::{Add, Mul};
@@ -30,7 +31,7 @@ fn union<T: Copy + Eq + Hash>(v1: &Vec<T>, v2: &Vec<T>) -> Vec<T> {
     a_set.union(&b_set).copied().collect()
 }
 
-// based on this https://en.wikipedia.org/wiki/Lagrange_polynomial, we were unable to find appropriate function in ark
+// based on this https://en.wikipedia.org/wiki/Lagrange_polynomial, we were unable to find an appropriate function in ark
 fn lagrange_interpolation(points: Vec<(FrElem, FrElem)>) -> DensePolynomial<FrElem> {
     let k = points.len() - 1;
     let mut interpolated_poly = DensePolynomial::from_coefficients_vec(vec![Fr::from(0)]);
@@ -52,6 +53,18 @@ fn lagrange_interpolation(points: Vec<(FrElem, FrElem)>) -> DensePolynomial<FrEl
     }
 
     interpolated_poly
+}
+
+fn extract_result(data: Vec<&str>, key: FrElem, hashes: Vec<FrElem>) -> Vec<&str> {
+    let hashes_set: HashSet<FrElem> = hashes.iter().copied().collect();
+    let mut result = vec![];
+    for elem in data {
+        if hashes_set.contains(&hash(elem, key)) {
+            result.push(elem);
+        }
+    }
+    assert_eq!(result.len(), hashes.len());
+    result
 }
 
 
@@ -103,10 +116,18 @@ fn main() {
     // Alice
     let a_s_poly0 = s_poly0;
     assert_eq!(a_s_poly0, a_poly.evaluate(&Fr::from(0)));
+    let a_encoded_intersection = s_encoded_intersection.clone();
+    let a_result = extract_result(a_data, a_k, a_encoded_intersection);
+    println!("Alice thinks the intersection is: {:?}", a_result);
 
     // Bob
     let b_s_poly0 = s_poly0;
     assert_eq!(b_s_poly0, b_poly.evaluate(&Fr::from(0)));
+    let b_encoded_intersection = s_encoded_intersection.clone();
+    let b_result = extract_result(b_data, b_k, b_encoded_intersection);
+    println!("Bob thinks the intersection is: {:?}", b_result);
+
+    // Alice and Bob should verify that the server sent the same set of hashes to both of them.
 }
 
 
