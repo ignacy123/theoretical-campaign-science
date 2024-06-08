@@ -1,5 +1,5 @@
 import flask
-from .users import in_user_context, login, logout
+from .users import in_user_context, login
 from .database import with_db_session
 
 blueprint = flask.Blueprint("blog", __name__)
