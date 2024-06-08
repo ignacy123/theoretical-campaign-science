@@ -1,17 +1,19 @@
+let ad_directory = "/static/blog/ads/";
+
 const ads = [
-    {path: 'ads/anvil.jpg', url: 'https://google.com', id: 'anvil'},
-    {path: 'ads/bidet.jpg', url: 'https://google.com', id: 'bidet'},
-    {path: 'ads/bliblie_control.jpg', url: 'https://google.com', id: 'bliblie'},
-    {path: 'ads/burger.jpeg', url: 'https://google.com', id: 'burger'},
-    {path: 'ads/goloneczka.jpg', url: 'https://google.com', id: 'goloneczka'},
-    {path: 'ads/micex.jpg', url: 'https://google.com', id: 'micex'},
-    {path: 'ads/mints.jpg', url: 'https://google.com', id: 'mints'},
-    {path: 'ads/nose_warmer.jpg', url: 'https://google.com', id: 'warmer'},
-    {path: 'ads/oranzenada.jpg', url: 'https://google.com', id: 'oranzenada'},
-    {path: 'ads/pizza.jpg', url: 'https://google.com', id: 'pizza'},
-    {path: 'ads/programerki.jpg', url: 'https://google.com', id: 'programerki'},
-    {path: 'ads/sciernisko.jpg', url: 'https://google.com', id: 'sciernisko'},
-    {path: 'ads/smalec.jpg', url: 'https://google.com', id: 'smalec'},
+    {path: 'anvil.jpg', url: 'https://google.com', id: 'anvil'},
+    {path: 'bidet.jpg', url: 'https://google.com', id: 'bidet'},
+    {path: 'bliblie_control.jpg', url: 'https://google.com', id: 'bliblie'},
+    {path: 'burger.jpeg', url: 'https://google.com', id: 'burger'},
+    {path: 'goloneczka.jpg', url: 'https://google.com', id: 'goloneczka'},
+    {path: 'micex.jpg', url: 'https://google.com', id: 'micex'},
+    {path: 'mints.jpg', url: 'https://google.com', id: 'mints'},
+    {path: 'nose_warmer.jpg', url: 'https://google.com', id: 'warmer'},
+    {path: 'oranzenada.jpg', url: 'https://google.com', id: 'oranzenada'},
+    {path: 'pizza.jpg', url: 'https://google.com', id: 'pizza'},
+    {path: 'programerki.jpg', url: 'https://google.com', id: 'programerki'},
+    {path: 'sciernisko.jpg', url: 'https://google.com', id: 'sciernisko'},
+    {path: 'smalec.jpg', url: 'https://google.com', id: 'smalec'},
 ];
 
 function getRandomAds(count) {
@@ -44,8 +46,8 @@ function displayRandomAds() {
         element.appendChild(a);
 
         const img = document.createElement('img');
-        img.src = ad.path;
-        img.alt = `Ad ${index + 1}`;
+        img.src = ad_directory + ad.path;
+        img.alt = 'Ad ' + ad.id;
         a.appendChild(img);
     });
 }
