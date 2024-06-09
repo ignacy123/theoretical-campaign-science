@@ -5,10 +5,9 @@ use std::ops::{Add, Mul};
 
 use ark_bls12_381::{Fr, FrConfig};
 use ark_ff::{Field, Fp256, MontBackend, PrimeField};
-use ark_poly::{DenseUVPolynomial, EvaluationDomain, Polynomial};
 use ark_poly::univariate::DensePolynomial;
-use ark_std::{One, UniformRand};
-use ark_std::iterable::Iterable;
+use ark_poly::{DenseUVPolynomial, Polynomial};
+use ark_std::UniformRand;
 use sha256::digest;
 
 type FrElem = Fp256<MontBackend<FrConfig, 4>>;
@@ -37,14 +36,18 @@ fn lagrange_interpolation(points: Vec<(FrElem, FrElem)>) -> DensePolynomial<FrEl
     let mut interpolated_poly = DensePolynomial::from_coefficients_vec(vec![Fr::from(0)]);
 
     for j in 0..(k + 1) {
-        let mut num: DensePolynomial<FrElem> = DensePolynomial::from_coefficients_vec(vec![Fr::from(1)]);
+        let mut num: DensePolynomial<FrElem> =
+            DensePolynomial::from_coefficients_vec(vec![Fr::from(1)]);
         let mut den: FrElem = Fr::from(1);
 
         for m in 0..(k + 1) {
             if j == m {
                 continue;
             }
-            num = num.naive_mul(&DensePolynomial::from_coefficients_vec(vec![-points[m].0, Fr::from(1)]));
+            num = num.naive_mul(&DensePolynomial::from_coefficients_vec(vec![
+                -points[m].0,
+                Fr::from(1),
+            ]));
             den = den * (points[j].0 - points[m].0);
         }
 
@@ -66,7 +69,6 @@ fn extract_result(data: Vec<&str>, key: FrElem, hashes: Vec<FrElem>) -> Vec<&str
     assert_eq!(result.len(), hashes.len());
     result
 }
-
 
 fn main() {
     // setup
@@ -91,7 +93,7 @@ fn main() {
     // Alice
     let a_z = s_z;
     let a_n = a_data.len();
-    let a_m = b_data.len();     // public knowledge
+    let a_m = b_data.len(); // public knowledge
     let a_zp = a_n + a_m - a_z;
     let mut a_rng = rand::thread_rng();
     let mut a_poly_coeffs: Vec<FrElem> = vec![];
@@ -99,12 +101,13 @@ fn main() {
         a_poly_coeffs.push(Fr::rand(&mut a_rng))
     }
     let a_poly = DensePolynomial::from_coefficients_vec(a_poly_coeffs);
-    let a_shares: Vec<(FrElem, FrElem)> = a_encoded.iter().map(|x| (*x, a_poly.evaluate(x))).collect();
+    let a_shares: Vec<(FrElem, FrElem)> =
+        a_encoded.iter().map(|x| (*x, a_poly.evaluate(x))).collect();
 
     // Bob
-    let b_z = s_z;
     let b_poly = a_poly.clone();
-    let b_shares: Vec<(FrElem, FrElem)> = b_encoded.iter().map(|x| (*x, b_poly.evaluate(x))).collect();
+    let b_shares: Vec<(FrElem, FrElem)> =
+        b_encoded.iter().map(|x| (*x, b_poly.evaluate(x))).collect();
 
     // Steve
     let s_shares_a: Vec<(FrElem, FrElem)> = a_shares.clone();
@@ -130,7 +133,6 @@ fn main() {
     // Alice and Bob should verify that the server sent the same set of hashes to both of them.
 }
 
-
 #[cfg(test)]
 mod tests {
     use crate::Fr;
@@ -140,6 +142,7 @@ mod tests {
         let a = Fr::from(2);
         let b = Fr::from(3);
         let c = Fr::from(5);
-        assert_eq!(c, a+b);
+        assert_eq!(c, a + b);
     }
 }
+
