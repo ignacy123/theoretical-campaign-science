@@ -1,5 +1,5 @@
 import flask
-from .users import in_user_context, login
+from .users import in_user_context, set_session, validate_login
 from .database import with_db_session
 
 blueprint = flask.Blueprint("blog", __name__)
@@ -20,15 +20,13 @@ def main_page():
 
 @blueprint.route("/login", methods=["POST"])
 def login_request():
-    # input validation
     try:
         username = flask.request.form['login']
-    except KeyError:
+        validate_login(username)
+    except (KeyError, ValueError):
         flask.abort(400) # 400: Bad Request
-    if not username.isalnum():
-        flask.abort(418) # 418: I'm a Teapot
 
-    login(username)
+    set_session(username)
     return flask.redirect(flask.url_for(".content_page"))
 
 @blueprint.route("/content")

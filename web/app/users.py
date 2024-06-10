@@ -1,5 +1,6 @@
 from flask import g, session, Blueprint, abort
 from functools import wraps
+import re
 
 blueprint = Blueprint("users", __name__)
 
@@ -19,11 +20,19 @@ def in_user_context(func):
         return func(*args, **kwargs)
     return wrapper
 
-def login(username : str):
+def set_session(username : str):
     session['user'] = username
     g.user = username
 
-def logout():
+def stop_session():
     if 'user' in session:
         del(session['user'])
     g.user = None
+
+def validate_login(login:str) -> bool:
+    if not (4 <= len(str) <= 64):
+        raise ValueError
+
+    pattern = '[A-Za-z0-9.~_-]*[A-Za-z0-9][A-Za-z0-9.~_-]*' # RFC 3986
+    if re.fullmatch(pattern, login) is None:
+        raise ValueError
