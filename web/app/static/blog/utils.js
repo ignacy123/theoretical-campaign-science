@@ -3,17 +3,20 @@ let ad_directory = "/static/blog/ads/";
 const ads = [
     {path: 'anvil.jpg', url: 'https://google.com', id: 'anvil'},
     {path: 'bidet.jpg', url: 'https://google.com', id: 'bidet'},
-    {path: 'bliblie_control.jpg', url: 'https://google.com', id: 'bliblie'},
+    // {path: 'bliblie_control.jpg', url: 'https://google.com', id: 'bliblie'},
     {path: 'burger.jpeg', url: 'https://google.com', id: 'burger'},
     {path: 'goloneczka.jpg', url: 'https://google.com', id: 'goloneczka'},
     {path: 'micex.jpg', url: 'https://google.com', id: 'micex'},
-    {path: 'mints.jpg', url: 'https://google.com', id: 'mints'},
-    {path: 'nose_warmer.jpg', url: 'https://google.com', id: 'warmer'},
-    {path: 'oranzenada.jpg', url: 'https://google.com', id: 'oranzenada'},
+    // {path: 'mints.jpg', url: 'https://google.com', id: 'mints'},
+    // {path: 'nose_warmer.jpg', url: 'https://google.com', id: 'warmer'},
+    // {path: 'oranzenada.jpg', url: 'https://google.com', id: 'oranzenada'},
     {path: 'pizza.jpg', url: 'https://google.com', id: 'pizza'},
     {path: 'programerki.jpg', url: 'https://google.com', id: 'programerki'},
     {path: 'sciernisko.jpg', url: 'https://google.com', id: 'sciernisko'},
     {path: 'smalec.jpg', url: 'https://google.com', id: 'smalec'},
+    // {path: 'dupex.png', url: 'https://google.com', id: 'dupex'},
+    {path: 'lung_extension.jpg', url: 'https://google.com', id: 'lungs'},
+    // {path: 'nosidelko.jpeg', url: 'https://google.com', id: 'carrier'},
 ];
 
 function getRandomAds(count) {
@@ -25,7 +28,6 @@ function getRandomAds(count) {
         [ads[currentIndex], ads[randomIndex]] = [ads[randomIndex], ads[currentIndex]];
     }
     const result = ads.slice(ads.length - count, ads.length);
-    console.log(result)
     return result;
 }
 
