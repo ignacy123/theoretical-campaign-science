@@ -502,21 +502,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "psi"
-version = "0.1.0"
-dependencies = [
- "ark-bls12-381",
- "ark-ff",
- "ark-poly",
- "ark-serialize",
- "ark-std",
- "clap",
- "digest",
- "rand",
- "sha256",
-]
-
-[[package]]
 name = "quote"
 version = "1.0.36"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -626,6 +611,21 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
+]
+
+[[package]]
+name = "tbop-tcs-psi"
+version = "0.1.1"
+dependencies = [
+ "ark-bls12-381",
+ "ark-ff",
+ "ark-poly",
+ "ark-serialize",
+ "ark-std",
+ "clap",
+ "digest",
+ "rand",
+ "sha256",
 ]
 
 [[package]]
