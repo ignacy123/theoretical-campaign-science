@@ -7,6 +7,7 @@ use ark_bls12_381::{Fr, FrConfig};
 use ark_ff::{Field, Fp256, MontBackend, PrimeField};
 use ark_poly::univariate::DensePolynomial;
 use ark_poly::{DenseUVPolynomial, Polynomial};
+use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use ark_std::UniformRand;
 use sha256::digest;
 
@@ -75,6 +76,7 @@ fn main() {
     let mut x_rng = rand::thread_rng();
     let a_k = Fr::rand(&mut x_rng);
     let b_k = a_k.clone();
+    println!("{}", a_k);
 
     // Alice
     let a_data: Vec<&str> = vec!["a", "b", "c", "d", "e"];
@@ -103,6 +105,10 @@ fn main() {
     let a_poly = DensePolynomial::from_coefficients_vec(a_poly_coeffs);
     let a_shares: Vec<(FrElem, FrElem)> =
         a_encoded.iter().map(|x| (*x, a_poly.evaluate(x))).collect();
+    let mut a_shares_serialized = vec![];
+    a_shares
+        .serialize_compressed(&mut a_shares_serialized)
+        .unwrap();
 
     // Bob
     let b_poly = a_poly.clone();
@@ -110,7 +116,8 @@ fn main() {
         b_encoded.iter().map(|x| (*x, b_poly.evaluate(x))).collect();
 
     // Steve
-    let s_shares_a: Vec<(FrElem, FrElem)> = a_shares.clone();
+    let s_shares_a: Vec<(FrElem, FrElem)> =
+        Vec::deserialize_compressed(&*a_shares_serialized).unwrap();
     let s_shares_b: Vec<(FrElem, FrElem)> = b_shares.clone();
     let s_shares_union = union(&s_shares_a, &s_shares_b);
     let s_interpolated_poly = lagrange_interpolation(s_shares_union);
