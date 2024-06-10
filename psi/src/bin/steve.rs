@@ -1,13 +1,10 @@
-use std::net::TcpListener;
+use std::net::{TcpListener, TcpStream};
 
-use ark_serialize::Write;
+use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use clap::Parser;
 use psi::{
-    crypto::{
-        deserialize_encoded_secrets, deserialize_encoded_shares, evaluate_secret, intersection,
-        serialize_secret, serialize_secrets,
-    },
-    network::read_all,
+    crypto::{evaluate_secret, intersection, FrElem},
+    network::{next_connection, receive, send},
 };
 
 #[derive(Parser, Debug)]
@@ -17,42 +14,62 @@ struct ServerArgs {
     server_address: String,
 }
 
+struct Server {
+    listener: TcpListener,
+    alice_connection: TcpStream,
+    bob_connection: TcpStream,
+}
+
+impl Server {
+    pub fn new(address: String) -> Server {
+        let listener = TcpListener::bind(address).unwrap();
+        let alice_connection = next_connection(&listener);
+        let bob_connection = next_connection(&listener);
+        Server {
+            listener,
+            alice_connection,
+            bob_connection,
+        }
+    }
+
+    pub fn allow_clients(&mut self) {
+        self.alice_connection = next_connection(&self.listener);
+        self.bob_connection = next_connection(&self.listener);
+    }
+
+    pub fn read_from_clients<T: CanonicalDeserialize>(&self) -> (T, T) {
+        (
+            receive(&self.alice_connection),
+            receive(&self.bob_connection),
+        )
+    }
+
+    pub fn send_to_clients<T: CanonicalSerialize>(&mut self, what: &T) {
+        send(what, &self.alice_connection);
+        send(what, &self.bob_connection);
+    }
+}
+
 fn main() -> std::io::Result<()> {
     let args = ServerArgs::parse();
-    let listener = TcpListener::bind(args.server_address).unwrap();
 
     loop {
-        println!("Waiting for Alice and Bob to connect");
-        let mut alice_connection = listener.incoming().next().unwrap().unwrap();
-        println!("Waiting for Bob");
-        let mut bob_connection = listener.incoming().next().unwrap().unwrap();
+        println!("Awaiting clients");
+        let mut server = Server::new(args.server_address.clone());
 
         println!("Waiting for hashed elements");
-        let alice_hashed = deserialize_encoded_secrets(read_all(&alice_connection));
-        let bob_hashed = deserialize_encoded_secrets(read_all(&bob_connection));
-
-        let inter = intersection(&alice_hashed, &bob_hashed);
-        println!("The intersection is of size {}", inter.len());
+        let (alice_hashed, bob_hashed) = server.read_from_clients();
 
         println!("Sending intersection");
-        alice_connection.write(&serialize_secrets(&inter)).unwrap();
-        alice_connection.shutdown(std::net::Shutdown::Both).unwrap();
-        bob_connection.write(&serialize_secrets(&inter)).unwrap();
-        bob_connection.shutdown(std::net::Shutdown::Both).unwrap();
-
-        println!("Waiting for Alice and Bob to connect");
-        alice_connection = listener.incoming().next().unwrap().unwrap();
-        println!("Waiting for Bob");
-        bob_connection = listener.incoming().next().unwrap().unwrap();
+        let inter: Vec<FrElem> = intersection(&alice_hashed, &bob_hashed);
+        server.send_to_clients(&inter);
 
         println!("Waiting for shares from Alice and Bob");
-        let alice_shares = deserialize_encoded_shares(read_all(&alice_connection));
-        println!("Waiting for shares from Bob");
-        let bob_shares = deserialize_encoded_shares(read_all(&bob_connection));
-        let steve_secret = serialize_secret(evaluate_secret(&alice_shares, &bob_shares));
+        server.allow_clients();
+        let (alice_shares, bob_shares) = server.read_from_clients();
+        let steve_secret = evaluate_secret(&alice_shares, &bob_shares);
 
         println!("Sending calculated secret");
-        alice_connection.write_all(&steve_secret).unwrap();
-        bob_connection.write_all(&steve_secret).unwrap();
+        server.send_to_clients(&steve_secret);
     }
 }

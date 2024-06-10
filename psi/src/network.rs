@@ -1,14 +1,21 @@
 use std::io::Read;
-use std::net::TcpStream;
+use std::net::{TcpListener, TcpStream};
 
-pub fn read_usize(mut stream: &TcpStream) -> usize {
-    let mut buf = vec![0; 8];
-    stream.read_exact(&mut buf).unwrap();
-    usize::from_be_bytes(buf.try_into().unwrap())
+use ark_serialize::{CanonicalDeserialize, CanonicalSerialize, Write};
+
+use crate::crypto::{deserialize, serialize};
+
+pub fn next_connection(listener: &TcpListener) -> TcpStream {
+    listener.incoming().next().unwrap().unwrap()
 }
 
-pub fn read_all(mut stream: &TcpStream) -> Vec<u8> {
+pub fn send<T: CanonicalSerialize>(what: &T, mut to: &TcpStream) {
+    to.write_all(&serialize(what)).unwrap();
+    to.shutdown(std::net::Shutdown::Write).unwrap();
+}
+
+pub fn receive<T: CanonicalDeserialize>(mut from: &TcpStream) -> T {
     let mut buf = vec![];
-    stream.read_to_end(&mut buf).unwrap();
-    buf
+    from.read_to_end(&mut buf).unwrap();
+    deserialize(buf)
 }

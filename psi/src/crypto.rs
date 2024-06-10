@@ -12,8 +12,8 @@ use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use ark_std::UniformRand;
 use sha256::digest;
 
-type FrElem = Fp256<MontBackend<FrConfig, 4>>;
-type Poly = DensePolynomial<ark_ff::Fp<MontBackend<FrConfig, 4>, 4>>;
+pub type FrElem = Fp256<MontBackend<FrConfig, 4>>;
+pub type Poly = DensePolynomial<ark_ff::Fp<MontBackend<FrConfig, 4>, 4>>;
 
 fn get_shared_secret() -> FrElem {
     let raw = env::var("SHARED_SECRET").unwrap_or("69".to_string());
@@ -71,49 +71,19 @@ pub fn evaluate_secret(v1: &Vec<(FrElem, FrElem)>, v2: &Vec<(FrElem, FrElem)>) -
     s_interpolated_poly.evaluate(&Fr::from(0))
 }
 
-pub fn encode_secrets(secrets: &Vec<&str>) -> Vec<FrElem> {
+pub fn encode_secrets(secrets: &Vec<String>) -> Vec<FrElem> {
     let seed = get_shared_secret();
     secrets.iter().map(|x| hash(x, seed)).collect()
 }
 
-pub fn serialize_secret(secret: FrElem) -> Vec<u8> {
+pub fn serialize<T: CanonicalSerialize>(what: &T) -> Vec<u8> {
     let mut s_encoded = vec![];
-    secret.serialize_compressed(&mut s_encoded).unwrap();
+    what.serialize_compressed(&mut s_encoded).unwrap();
     s_encoded
 }
 
-pub fn serialize_secrets(secret: &Vec<FrElem>) -> Vec<u8> {
-    let mut s_encoded = vec![];
-    secret.serialize_compressed(&mut s_encoded).unwrap();
-    s_encoded
-}
-
-pub fn serialize_polynomial(poly: &Poly) -> Vec<u8> {
-    let mut s_encoded = vec![];
-    poly.serialize_compressed(&mut s_encoded).unwrap();
-    s_encoded
-}
-
-pub fn serialize_points(points: Vec<(FrElem, FrElem)>) -> Vec<u8> {
-    let mut s_encoded = vec![];
-    points.serialize_compressed(&mut s_encoded).unwrap();
-    s_encoded
-}
-
-pub fn deserialize_point(bytes: Vec<u8>) -> FrElem {
-    FrElem::deserialize_compressed(&*bytes).unwrap()
-}
-
-pub fn deserialize_encoded_secrets(bytes: Vec<u8>) -> Vec<FrElem> {
-    Vec::deserialize_compressed(&*bytes).unwrap()
-}
-
-pub fn deserialize_encoded_shares(bytes: Vec<u8>) -> Vec<(FrElem, FrElem)> {
-    Vec::deserialize_compressed(&*bytes).unwrap()
-}
-
-pub fn deserialize_polynomial(bytes: Vec<u8>) -> Poly {
-    DensePolynomial::deserialize_compressed(&*bytes).unwrap()
+pub fn deserialize<T: CanonicalDeserialize>(bytes: Vec<u8>) -> T {
+    T::deserialize_compressed(&*bytes).unwrap()
 }
 
 pub fn random_polynomial(z: usize) -> Poly {
@@ -133,12 +103,12 @@ pub fn evaluate_at_zero(poly: &Poly) -> FrElem {
     poly.evaluate(&Fr::from(0))
 }
 
-pub fn extract_result(data: Vec<&str>, hashes: Vec<FrElem>) -> Vec<&str> {
+pub fn extract_result(data: Vec<String>, hashes: Vec<FrElem>) -> Vec<String> {
     let hashes_set: HashSet<FrElem> = hashes.iter().copied().collect();
     let mut result = vec![];
     let key = get_shared_secret();
     for elem in data {
-        if hashes_set.contains(&hash(elem, key)) {
+        if hashes_set.contains(&hash(&elem, key)) {
             result.push(elem);
         }
     }
