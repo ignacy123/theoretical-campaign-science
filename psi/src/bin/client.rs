@@ -76,6 +76,7 @@ impl Client {
 fn main() -> std::io::Result<()> {
     let args = ClientArgs::parse();
 
+    // TODO read actual data from db
     let mut client = if args.primary {
         Client::new_primary(
             args.client_address,
@@ -113,6 +114,15 @@ fn main() -> std::io::Result<()> {
 
     let server_intersection: Vec<FrElem> = receive(&client.server_connection);
     println!("Received intersection");
+
+    client.reconnect_to_other();
+    send(&server_intersection, &client.other_connection);
+    let other_intersection: Vec<FrElem> = receive(&client.other_connection);
+    if server_intersection == other_intersection {
+        println!("Validated my intersection against other's");
+    } else {
+        panic!("SERVER IS A LIAR");
+    }
 
     let random_poly: Poly;
     client.reconnect_to_other();
