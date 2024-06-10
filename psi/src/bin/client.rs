@@ -2,7 +2,7 @@ use core::panic;
 use std::net::{TcpListener, TcpStream};
 
 use clap::Parser;
-use psi::{
+use tbop_tcs_psi::{
     crypto::{
         encode_secrets, evaluate, evaluate_at_zero, extract_result, random_polynomial, FrElem, Poly,
     },

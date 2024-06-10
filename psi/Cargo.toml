@@ -1,7 +1,9 @@
 [package]
-name = "psi"
+name = "tbop-tcs-psi"
 version = "0.1.0"
 edition = "2021"
+description = "TBOP project"
+license = "MIT"
 
 [[bin]]
 name = "client"

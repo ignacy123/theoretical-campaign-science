@@ -2,7 +2,7 @@ use std::net::{TcpListener, TcpStream};
 
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use clap::Parser;
-use psi::{
+use tbop_tcs_psi::{
     crypto::{evaluate_secret, intersection, FrElem},
     network::{next_connection, receive, send},
 };
