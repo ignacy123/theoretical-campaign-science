@@ -1,6 +1,6 @@
 import flask
 from .database import with_db_session
-from .users import  in_user_context, login, logout
+from .users import  in_user_context, set_session, stop_session
 
 blueprint = flask.Blueprint("test", __name__)
 
@@ -10,12 +10,12 @@ def main_page():
 
 @blueprint.route("/login/<username>")
 def login_page(username):
-    login(username)
+    set_session(username)
     return flask.redirect(flask.url_for('.hello_user_page'))
 
 @blueprint.route("/logout")
 def logout_page():
-    logout()
+    stop_session()
     return flask.redirect(flask.url_for('.main_page'))
 
 @blueprint.route("/hello_user")

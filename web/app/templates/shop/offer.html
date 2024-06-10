@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Shop offer</title>
+    </head>
+    <body>
+        {% if can_buy %}
+        <form action="./purchase" method="post">
+            <input type="submit" value="Buy a car">
+        </form>
+        {% else %}
+        <p>
+            You cannot buy more that one car.
+        </p>
+        {% endif %}
+    </body>
+</html>

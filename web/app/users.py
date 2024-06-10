@@ -30,7 +30,7 @@ def stop_session():
     g.user = None
 
 def validate_login(login:str) -> bool:
-    if not (4 <= len(str) <= 64):
+    if not (4 <= len(login) <= 64):
         raise ValueError
 
     pattern = '[A-Za-z0-9.~_-]*[A-Za-z0-9][A-Za-z0-9.~_-]*' # RFC 3986

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Main page</title>
+        <style>
+            input:invalid {
+                background-color: pink;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 style="text-align: center;">Welcome to the shop</h1>
+        <hr>
+        <form method="post" action="./login">
+            <label>
+                Enter your login:
+                <input type="text" required minlength="4" maxlength="64" pattern="[A-Za-z0-9.~_-]*[A-Za-z0-9][A-Za-z0-9.~_-]*" name="login">
+            </label>
+            <input type="submit" value="Login">
+        </form>
+    </body>
+</html>
