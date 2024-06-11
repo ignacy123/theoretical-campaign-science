@@ -29,7 +29,7 @@ def stop_session():
         del(session['user'])
     g.user = None
 
-def validate_login(login:str) -> bool:
+def validate_login(login:str):
     if not (4 <= len(login) <= 64):
         raise ValueError
 

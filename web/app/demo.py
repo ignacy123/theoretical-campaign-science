@@ -26,6 +26,6 @@ def hello_user_page():
 @blueprint.route("/db")
 @with_db_session
 def db_test_page(db):
-    db.execute('SELECT * from test')
+    db.execute('SELECT * FROM demo')
     data = {row.key:row.value for row in db.fetchall()}
     return flask.render_template("demo/db_test.html", data=data)

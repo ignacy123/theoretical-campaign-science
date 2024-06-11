@@ -5,12 +5,16 @@ from .database import with_db_session
 blueprint = flask.Blueprint("blog", __name__)
 
 
+def validate_ad_id(ad_id:str):
+    if not (1 <= len(ad_id) <= 32):
+        raise ValueError
+
 @with_db_session
-def add_to_ad_log(db, username:str, ad_id:str):
+def register_ad_click(db, username:str, ad_id:str):
     db.execute("""
-               INSERT INTO ad_log (username, ad)
+               INSERT INTO clicks (username, ad)
                VALUES (%s, %s)
-               ON CONFLICT ON CONSTRAINT user_ad DO NOTHING
+               ON CONFLICT DO NOTHING
                """, (username, ad_id))
 
 
@@ -41,9 +45,10 @@ def ad_click_request():
     try:
         link = flask.request.args['link']
         ad_id = flask.request.args['id']
-    except KeyError:
+        validate_ad_id(ad_id)
+    except (KeyError, ValueError):
         flask.abort(400) # 400: Bad Request
     
-    add_to_ad_log(flask.g.user, ad_id)
+    register_ad_click(flask.g.user, ad_id)
 
     return flask.redirect(link)

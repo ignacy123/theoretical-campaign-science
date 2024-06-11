@@ -2,7 +2,7 @@
 - Bump up version in `Cargo.toml`
 - Run `cargo publish`
 
-# Clien environment variables
+# Client environment variables
 - `SHARED_SECRET` - shared secret necessary in the PSI protocol
 - `POSTGRES_CONNECTION` - params to connect to postgres
 - `POSTGRES_QUERY` - query to retrieve strings for intersection
