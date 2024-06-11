@@ -6,6 +6,7 @@ use tbop_tcs_psi::{
     crypto::{
         encode_secrets, evaluate, evaluate_at_zero, extract_result, random_polynomial, FrElem, Poly,
     },
+    db::{get_usernames, update_intersection},
     network::{next_connection, receive, send},
 };
 
@@ -78,30 +79,9 @@ fn main() -> std::io::Result<()> {
 
     // TODO read actual data from db
     let mut client = if args.primary {
-        Client::new_primary(
-            args.client_address,
-            args.server_address,
-            vec![
-                "a".to_string(),
-                "b".into(),
-                "c".into(),
-                "d".into(),
-                "e".into(),
-            ],
-        )
+        Client::new_primary(args.client_address, args.server_address, get_usernames())
     } else {
-        Client::new_secondary(
-            args.client_address,
-            args.server_address,
-            vec![
-                "b".to_string(),
-                "d".into(),
-                "e".into(),
-                "f".into(),
-                "g".into(),
-                "h".into(),
-            ],
-        )
+        Client::new_secondary(args.client_address, args.server_address, get_usernames())
     };
 
     println!("Exchanging lengths");
@@ -152,6 +132,7 @@ fn main() -> std::io::Result<()> {
 
     let result = extract_result(client.data, server_intersection);
     println!("The intersection is {:?}", result);
+    update_intersection(result);
 
     Ok(())
 }
