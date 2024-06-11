@@ -11,9 +11,11 @@ app.config.from_file('config.json', load=json.load)
 
 database_setup(app)
 app.register_blueprint(users_blueprint)
-app.register_blueprint(demo_blueprint, url_prefix='/test')
-app.register_blueprint(blog_blueprint, url_prefix='/blog')
-app.register_blueprint(shop_blueprint, url_prefix='/shop')
+app.register_blueprint(demo_blueprint, url_prefix='/demo')
+if 'blog' in app.config['FEATURES']:
+    app.register_blueprint(blog_blueprint, url_prefix='/blog')
+if 'shop' in app.config['FEATURES']:
+    app.register_blueprint(shop_blueprint, url_prefix='/shop')
 
 if (main_redirect := app.config.get('MAIN_REDIRECT')) is not None:
     app.add_url_rule('/', 'main', lambda :flask.redirect(f'/{main_redirect}'))

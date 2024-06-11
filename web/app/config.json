@@ -1,5 +1,6 @@
 {
     "SECRET_KEY" : "verysecretkey",
+    "FEATURES" : ["blog", "shop"],
     "MAIN_REDIRECT" : "blog",
 
     "DB_HOST" : "web-server.cngaa8qiwcqm.eu-north-1.rds.amazonaws.com",

@@ -2,7 +2,7 @@ import flask
 from .database import with_db_session
 from .users import  in_user_context, set_session, stop_session
 
-blueprint = flask.Blueprint("test", __name__)
+blueprint = flask.Blueprint("demo", __name__)
 
 @blueprint.route("/")
 def main_page():
