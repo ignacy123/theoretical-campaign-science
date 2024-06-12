@@ -22,6 +22,7 @@ blueprints = {
 for feature in app.config['FEATURES']:
     try:
         app.register_blueprint(blueprints[feature], url_prefix=f'/{feature}')
+        print(f"Loaded feature: {feature}", file=sys.stderr)
     except KeyError:
         sys.exit(f"ERROR: No such feature: {feature}")
 

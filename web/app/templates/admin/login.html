@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Login to admin panel</title>
+        <style>
+            p.error_msg {
+                color: red;
+                font-weight: bold;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 style="text-align: center;">Login to admin panel</h1>
+        <hr>
+        <form method="post" action="./login">
+            <label>
+                Enter admin password:
+                <input type="password" maxlength="64" name="password">
+            </label>
+            <input type="submit" value="Login">
+        </form>
+        {% with messages = get_flashed_messages() %}{% if messages %}
+        <p class="error_msg">
+            {% for msg in messages %}
+            {{ msg }} <br>
+            {% endfor %}
+        </p>
+        {% endif %}{% endwith %}
+    </body>
+</html>

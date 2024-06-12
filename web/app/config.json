@@ -1,5 +1,6 @@
 {
     "SECRET_KEY" : "verysecretkey",
+    "ADMIN_PASSWORD" : "adminpassword",
     "FEATURES" : ["blog", "shop", "demo", "admin"],
     "MAIN_FEATURE" : "blog",
 
