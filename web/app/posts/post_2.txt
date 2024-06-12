@@ -1,0 +1,26 @@
+<h1>Private Set Intersection</h1>
+
+<h2>Example usages</h2>
+
+<ul>
+    <li><b>Measuring ad efficiency (our use-case)</b>:
+        A car company wants to know which of their clients have at any point clicked an ad the company paid for.
+        The ad-providing company keeps a list of all registered accounts that clicked on ads.
+        PSI allows them to calculate the intersection of those sets of accounts.
+    </li>
+    <li><b>DNA matching</b>:
+        A client wishes to check whether their DNA sequence is related to any diseases.
+        A research facility that stores a list of suspicious sequences wants to keep it private.
+        PSI allows the client to make a query without revealing their entire DNA sequence.
+    </li>
+    <li><b>Password checkup</b>:
+        A client has a list of passwords they use, and the server stores a list of leaked passwords.
+        PSI allows the client to know which passwords are leaked while keeping the rest of them secure.
+    </li>
+    <li><b>Dating preferences</b>:
+        Alice and Bob have a set of their dating preferences.
+        PSI allows them to know what they both expect while keeping the rest of their taste private.
+    </li>
+</ul>
+
+<iframe height="550" src="/static/blog/figures/diagram.svg" style="border:none;" width="750"></iframe>

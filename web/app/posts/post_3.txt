@@ -1,0 +1,35 @@
+<h1>Private Set Intersection</h1>
+
+<h2>The protocol</h2>
+
+<p>Alice and Bob will use the help of a third party server, Steve. They do not trust him, so they will have to
+    verify all of his claims.</p>
+
+<p>Alice has a set of strings \( A = (a_1, \dots, a_n) \), Bob has a set of strings \( B = (b_1, \dots, b_m) \).
+    All parties agree to work
+    over a field \( \mathbb{F} \) and on a pseudorandom function \( F : (str \times \mathbb{F}) \rightarrow
+    \mathbb{F} \). The sizes of \( A \) and \( B \) are public.</p>
+
+<ol>
+    <li>Alice and Bob agree on a secret key \( k \in \mathbb{F} \).</li>
+    <li>Alice calculates \( A' = (a_1', \dots, a_n') \), where \( a_i' = F(a_i, k) \) and sends it to Steve.
+    </li>
+    <li>Bob calculates \( B' = (b_1', \dots, b_m') \), where \( b_i' = F(b_i, k) \) and sends it to Steve.</li>
+    <li>Steve computes \( Z = A' \cap B' \) and sends it to Alice and Bob.</li>
+    <li>Alice verifies that all elements with hashes in \( Z \) are in fact in \( A \).</li>
+    <li>Bob verifies that all elements with hashes in \( Z \) are in fact in \( B \).</li>
+    <li>Alice chooses a random polynomial \( P \) over \( \mathbb{F} \) of degree \( |A| + |B| - |Z| - 1 \) and
+        sends it to Bob.
+    </li>
+    <li>Alice calculates \( A^P = ((a_1', P(a_1')), \dots, (a_n', P(a_n'))) \) and sends it to Steve.</li>
+    <li>Bob calculates \( B^P = ((b_1', P(b_1')), \dots, (b_m', P(b_m'))) \) and sends it to Steve.</li>
+    <li>Steve interpolates \( P \) from points \( A^P \cup B^P \) and sends \( P(0_{\mathbb{F}}) \) to Alice and
+        Bob.
+    </li>
+    <li>Alice verifies that the value sent by Steve is in fact \( P(0_{\mathbb{F}}) \).</li>
+    <li>Bob verifies that the value sent by Steve is in fact \( P(0_{\mathbb{F}}) \).</li>
+</ol>
+
+<p>Steps 7. to 12. are necessary to make sure that Steve did not omit any elements from the intersection.
+    If there are in fact only \( |Z| \) elements in the intersection, then there are \( |A| + |B| - |Z|\)
+    distinct elements in total, and Steve will be able to interpolate \( P \).</p>

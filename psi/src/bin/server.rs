@@ -3,8 +3,9 @@ use std::net::{TcpListener, TcpStream};
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use clap::Parser;
 use tbop_tcs_psi::{
-    crypto::{evaluate_secret, intersection, FrElem},
+    crypto::{evaluate_at_zero, lagrange_interpolation, FrElem},
     network::{next_connection, receive, send},
+    utils::{intersection, union},
 };
 
 #[derive(Parser, Debug)]
@@ -67,7 +68,9 @@ fn main() -> std::io::Result<()> {
         println!("Waiting for shares from Alice and Bob");
         server.allow_clients();
         let (alice_shares, bob_shares) = server.read_from_clients();
-        let steve_secret = evaluate_secret(&alice_shares, &bob_shares);
+        let shares_union = union(&alice_shares, &bob_shares);
+        let interpolated_poly = lagrange_interpolation(shares_union);
+        let steve_secret = evaluate_at_zero(&interpolated_poly);
 
         println!("Sending calculated secret");
         server.send_to_clients(&steve_secret);

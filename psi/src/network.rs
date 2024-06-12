@@ -3,7 +3,7 @@ use std::net::{TcpListener, TcpStream};
 
 use ark_serialize::{CanonicalDeserialize, CanonicalSerialize, Write};
 
-use crate::crypto::{deserialize, serialize};
+use crate::utils::{deserialize, serialize};
 
 pub fn next_connection(listener: &TcpListener) -> TcpStream {
     listener.incoming().next().unwrap().unwrap()

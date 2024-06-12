@@ -1,6 +1,5 @@
 use std::collections::HashSet;
 use std::env;
-use std::hash::Hash;
 use std::ops::{Add, Mul};
 
 use ark_bls12_381::{Fr, FrConfig};
@@ -8,7 +7,6 @@ use ark_ff::{Field, Fp256, MontBackend, PrimeField};
 use ark_poly::univariate::DensePolynomial;
 use ark_poly::DenseUVPolynomial;
 use ark_poly::Polynomial;
-use ark_serialize::{CanonicalDeserialize, CanonicalSerialize};
 use ark_std::UniformRand;
 use sha256::digest;
 
@@ -26,7 +24,36 @@ fn hash(element: &str, key: FrElem) -> FrElem {
     Fr::from_le_bytes_mod_order(digest.as_bytes())
 }
 
-fn lagrange_interpolation(points: Vec<(FrElem, FrElem)>) -> DensePolynomial<FrElem> {
+pub fn extract_result(data: Vec<String>, hashes: Vec<FrElem>) -> Vec<String> {
+    let hashes_set: HashSet<FrElem> = hashes.iter().copied().collect();
+    let mut result = vec![];
+    let key = get_shared_secret();
+    for elem in data {
+        if hashes_set.contains(&hash(&elem, key)) {
+            result.push(elem);
+        }
+    }
+    assert_eq!(result.len(), hashes.len());
+    result
+}
+
+pub fn encode_data(data: &Vec<String>) -> Vec<FrElem> {
+    let seed = get_shared_secret();
+    data.iter().map(|x| hash(x, seed)).collect()
+}
+
+// polynomials
+
+pub fn random_polynomial(z: usize) -> Poly {
+    let mut a_rng = rand::thread_rng();
+    let mut a_poly_coeffs: Vec<FrElem> = vec![];
+    for _ in 0..z {
+        a_poly_coeffs.push(Fr::rand(&mut a_rng))
+    }
+    DensePolynomial::from_coefficients_vec(a_poly_coeffs)
+}
+
+pub fn lagrange_interpolation(points: Vec<(FrElem, FrElem)>) -> DensePolynomial<FrElem> {
     let k = points.len() - 1;
     let mut interpolated_poly = DensePolynomial::from_coefficients_vec(vec![Fr::from(0)]);
 
@@ -53,65 +80,10 @@ fn lagrange_interpolation(points: Vec<(FrElem, FrElem)>) -> DensePolynomial<FrEl
     interpolated_poly
 }
 
-pub fn intersection<T: Copy + Eq + Hash>(v1: &Vec<T>, v2: &Vec<T>) -> Vec<T> {
-    let a_set: HashSet<T> = v1.iter().copied().collect();
-    let b_set: HashSet<T> = v2.iter().copied().collect();
-    a_set.intersection(&b_set).copied().collect()
-}
-
-pub fn union<T: Copy + Eq + Hash>(v1: &Vec<T>, v2: &Vec<T>) -> Vec<T> {
-    let a_set: HashSet<T> = v1.iter().copied().collect();
-    let b_set: HashSet<T> = v2.iter().copied().collect();
-    a_set.union(&b_set).copied().collect()
-}
-
-pub fn evaluate_secret(v1: &Vec<(FrElem, FrElem)>, v2: &Vec<(FrElem, FrElem)>) -> FrElem {
-    let s_shares_union = union(&v1, &v2);
-    let s_interpolated_poly = lagrange_interpolation(s_shares_union);
-    s_interpolated_poly.evaluate(&Fr::from(0))
-}
-
-pub fn encode_secrets(secrets: &Vec<String>) -> Vec<FrElem> {
-    let seed = get_shared_secret();
-    secrets.iter().map(|x| hash(x, seed)).collect()
-}
-
-pub fn serialize<T: CanonicalSerialize>(what: &T) -> Vec<u8> {
-    let mut s_encoded = vec![];
-    what.serialize_compressed(&mut s_encoded).unwrap();
-    s_encoded
-}
-
-pub fn deserialize<T: CanonicalDeserialize>(bytes: Vec<u8>) -> T {
-    T::deserialize_compressed(&*bytes).unwrap()
-}
-
-pub fn random_polynomial(z: usize) -> Poly {
-    let mut a_rng = rand::thread_rng();
-    let mut a_poly_coeffs: Vec<FrElem> = vec![];
-    for _ in 0..z {
-        a_poly_coeffs.push(Fr::rand(&mut a_rng))
-    }
-    DensePolynomial::from_coefficients_vec(a_poly_coeffs)
-}
-
-pub fn evaluate(poly: &Poly, points: &Vec<FrElem>) -> Vec<(FrElem, FrElem)> {
-    points.iter().map(|x| (*x, poly.evaluate(x))).collect()
-}
-
 pub fn evaluate_at_zero(poly: &Poly) -> FrElem {
     poly.evaluate(&Fr::from(0))
 }
 
-pub fn extract_result(data: Vec<String>, hashes: Vec<FrElem>) -> Vec<String> {
-    let hashes_set: HashSet<FrElem> = hashes.iter().copied().collect();
-    let mut result = vec![];
-    let key = get_shared_secret();
-    for elem in data {
-        if hashes_set.contains(&hash(&elem, key)) {
-            result.push(elem);
-        }
-    }
-    assert_eq!(result.len(), hashes.len());
-    result
+pub fn evaluate_at_points(poly: &Poly, points: &Vec<FrElem>) -> Vec<(FrElem, FrElem)> {
+    points.iter().map(|x| (*x, poly.evaluate(x))).collect()
 }

@@ -1,0 +1,10 @@
+<h1>Private Set Intersection</h1>
+
+<h2>Problem definition</h2>
+
+<p>Alice has a set of elements \( A = (a_1, \dots, a_n) \) and Bob has a set of elements \( B = (b_1, \dots,
+    b_m) \).
+    They wish to learn \( A \cap B \), but are unwilling to share any elements that are not in the intersection
+    with each other.</p>
+
+<iframe height="550" src="/static/blog/figures/psi_definition.svg" style="border:none;" width="650"></iframe>

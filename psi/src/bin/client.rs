@@ -4,7 +4,8 @@ use std::net::{TcpListener, TcpStream};
 use clap::Parser;
 use tbop_tcs_psi::{
     crypto::{
-        encode_secrets, evaluate, evaluate_at_zero, extract_result, random_polynomial, FrElem, Poly,
+        encode_data, evaluate_at_points, evaluate_at_zero, extract_result, random_polynomial,
+        FrElem, Poly,
     },
     db::{get_usernames, update_intersection},
     network::{next_connection, receive, send},
@@ -89,7 +90,7 @@ fn main() -> std::io::Result<()> {
     let other_len: usize = receive(&client.other_connection);
 
     println!("Sending elements to server");
-    let encoded = encode_secrets(&client.data);
+    let encoded = encode_data(&client.data);
     send(&encoded, &client.server_connection);
 
     let server_intersection: Vec<FrElem> = receive(&client.server_connection);
@@ -116,7 +117,7 @@ fn main() -> std::io::Result<()> {
             random_poly = receive(&client.other_connection);
         }
     }
-    let shares = evaluate(&random_poly, &encoded);
+    let shares = evaluate_at_points(&random_poly, &encoded);
     client.reconnect_to_server();
     send(&shares, &client.server_connection);
     println!("Sending shares to server");
