@@ -1,6 +1,7 @@
 import flask
 from .database import with_db_session
 from .users import in_admin_context, set_admin_session, stop_admin_session, is_in_admin_session, admin_password_correct
+import subprocess
 
 blueprint = flask.Blueprint("admin", __name__)
 
@@ -46,3 +47,10 @@ def logout_request():
 def panel_page():
     intersection = db_get_intersection()
     return flask.render_template('admin/panel.html', intersection=intersection)
+
+@blueprint.route("/run_psi", methods=["POST"])
+@in_admin_context
+def run_psi_request():
+    script_path = flask.current_app.config["PSI_SCRIPT_PATH"]
+    subprocess.Popen(script_path)
+    return flask.redirect(flask.url_for('.panel_page'))
