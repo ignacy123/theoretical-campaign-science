@@ -41,6 +41,9 @@ const ads = [
     {path: 'car_7.jpg', url: 'https://tcs-cars.sytes.net/shop/', id: 'car_7'},
     {path: 'car_8.jpg', url: 'https://tcs-cars.sytes.net/shop/', id: 'car_8'},
     {path: 'car_9.jpg', url: 'https://tcs-cars.sytes.net/shop/', id: 'car_9'},
+    {path: 'car_10.jpg', url: 'https://tcs-cars.sytes.net/shop/', id: 'car_10'},
+    {path: 'car_11.jpg', url: 'https://tcs-cars.sytes.net/shop/', id: 'car_11'},
+    {path: 'car_12.jpg', url: 'https://tcs-cars.sytes.net/shop/', id: 'car_12'},
 ];
 
 function getRandomAds(count) {

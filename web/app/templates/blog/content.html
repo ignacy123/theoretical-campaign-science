@@ -48,11 +48,6 @@
 </head>
 <body>
 
-<!--<div style="text-align: center;">-->
-<!--    <h1 style="font-size: 50px; color: cornflowerblue">https://tcs-blog.sytes.net</h1>-->
-<!--</div>-->
-
-
 <div class="container">
     <div class="column">
 
@@ -67,10 +62,36 @@
 
         <iframe height="550" src="/static/blog/figures/psi_definition.svg" style="border:none;" width="650"></iframe>
 
-        <p>Alice and Bob will use the help of a third party server, Steve. They do not trust him, so they will have to
-            verify all of his claims.</p>
+        <h2>Example usages</h2>
+
+        <ul>
+            <li><b>Measuring ad efficiency (our use-case)</b>:
+                A car company wants to know which of their clients have at any point clicked an ad the company paid for.
+                The ad-providing company keeps a list of all registered accounts that clicked on ads.
+                PSI allows them to calculate the intersection of those sets of accounts.
+            </li>
+            <li><b>DNA matching</b>:
+                A client wishes to check whether their DNA sequence is related to any diseases.
+                A research facility that stores a list of suspicious sequences wants to keep it private.
+                PSI allows the client to make a query without revealing their entire DNA sequence.
+            </li>
+            <li><b>Password checkup</b>:
+                A client has a list of passwords they use, and the server stores a list of leaked passwords.
+                PSI allows the client to know which passwords are leaked while keeping the rest of them secure.
+            </li>
+            <li><b>Dating preferences</b>:
+                Alice and Bob have a set of their dating preferences.
+                PSI allows them to know what they both expect while keeping the rest of their taste private.
+            </li>
+        </ul>
+
+        <iframe height="550" src="/static/blog/figures/diagram.svg" style="border:none;" width="750"></iframe>
+
 
         <h2>The protocol</h2>
+
+        <p>Alice and Bob will use the help of a third party server, Steve. They do not trust him, so they will have to
+            verify all of his claims.</p>
 
         <p>Alice has a set of strings \( A = (a_1, \dots, a_n) \), Bob has a set of strings \( B = (b_1, \dots, b_m) \).
             All parties agree to work
@@ -100,35 +121,6 @@
         <p>Steps 7. to 12. are necessary to make sure that Steve did not omit any elements from the intersection.
             If there are in fact only \( |Z| \) elements in the intersection, then there are \( |A| + |B| - |Z|\)
             distinct elements in total, and Steve will be able to interpolate \( P \).</p>
-
-        <h2>Example usages</h2>
-
-        <ul>
-            <li><b>Measuring ad efficiency (our use-case)</b>:
-                A car company wants to know which of their clients have at any point clicked an ad the company paid for.
-                The ad-providing company keeps a list of all registered accounts that clicked on ads.
-                PSI allows them to calculate the intersection of those sets of accounts.
-            </li>
-            <li><b>DNA matching</b>:
-                A client wishes to check whether their DNA sequence is related to any diseases.
-                A research facility that stores a list of suspicious sequences wants to keep it private.
-                PSI allows the client to make a query without revealing their entire DNA sequence.
-            </li>
-            <li><b>Password checkup</b>:
-                A client has a list of passwords they use, and the server stores a list of leaked passwords.
-                PSI allows the client to know which passwords are leaked while keeping the rest of them secure.
-            </li>
-            <li><b>Dating preferences</b>:
-                Alice and Bob have a set of their dating preferences.
-                PSI allows them to know what they both expect while keeping the rest of their taste private.
-            </li>
-        </ul>
-
-        <!--        <h2>Our use-case</h2>-->
-
-        <!--        <p>In our case, Alice is the ad-providing company, and Bob is a cars' dealership. Both parties keep a list of-->
-        <!--            registered users-->
-        <!--            and thanks to the PSI, they can check how effective the ads were.</p>-->
 
     </div>
     <div class="column">
