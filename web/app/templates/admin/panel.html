@@ -7,6 +7,13 @@
     <body>
         <h1>Admin panel</h1>
         <hr>
+        <h3>All users:</h3>
+        <ul>
+            {% for username in all_users %}
+            <li>{{ username }}</li>
+            {% endfor %}
+        </ul>
+        <hr>
         <h3>Current intersection:</h3>
         <ul>
             {% for username in intersection %}

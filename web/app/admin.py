@@ -11,6 +11,11 @@ def db_get_intersection(db):
     db.execute("SELECT * FROM intersection")
     return [row.username for row in db.fetchall()]
 
+@with_db_session
+def db_get_all_users(db):
+    db.execute("SELECT * FROM (SELECT username FROM clicks UNION SELECT username FROM sales)")
+    return [row.username for row in db.fetchall()]
+
 
 @blueprint.route("/")
 def main_page():
@@ -45,8 +50,9 @@ def logout_request():
 @blueprint.route("/panel")
 @in_admin_context
 def panel_page():
+    all_users = db_get_all_users()
     intersection = db_get_intersection()
-    return flask.render_template('admin/panel.html', intersection=intersection)
+    return flask.render_template('admin/panel.html', all_users=all_users, intersection=intersection)
 
 @blueprint.route("/run_psi", methods=["POST"])
 @in_admin_context
