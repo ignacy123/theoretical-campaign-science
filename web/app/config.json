@@ -1,7 +1,7 @@
 {
     "SECRET_KEY" : "verysecretkey",
-    "FEATURES" : ["blog", "shop"],
-    "MAIN_REDIRECT" : "blog",
+    "FEATURES" : ["blog", "shop", "demo", "admin"],
+    "MAIN_FEATURE" : "blog",
 
     "DB_HOST" : "web-server.cngaa8qiwcqm.eu-north-1.rds.amazonaws.com",
     "DB_PORT" : 5432,

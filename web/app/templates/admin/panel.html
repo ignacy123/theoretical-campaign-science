@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Admin panel</title>
+    </head>
+    <body>
+        <h1>Admin panel</h1>
+        <hr>
+        <h3>Current intersection:</h3>
+        <ul>
+            {% for username in intersection %}
+            <li>{{ username }}</li>
+            {% endfor %}
+        </ul>
+        <hr>
+        <form action="./run_psi" method="post">
+            <input type="submit" value="Run PSI" onclick="alert('Not implemented')">
+        </form>
+    </body>
+</html>
