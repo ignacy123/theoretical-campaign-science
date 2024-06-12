@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Main page</title>
+    </head>
+    <body>
+        <h1 style="text-align: center;">Welcome to the blog</h1>
+        {% for id,title in posts %}
+        <hr>
+        <a href="./post/{{ id }}">{{ title }}</a>
+        {% endfor %}
+    </body>
+</html>

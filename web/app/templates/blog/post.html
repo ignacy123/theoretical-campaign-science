@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Blog Post</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .column {
+            flex: 1;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .column:nth-child(2) {
+            flex: 0 0 30%;
+        }
+
+        .container {
+            display: flex;
+            margin: auto;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        .ad {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .ad img {
+            max-width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+    </style>
+    <script async id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<div class="container">
+    <div class="column">
+        {{ content | safe }}
+    </div>
+    <div class="column">
+        <div class="ad" id="ad1"></div>
+
+        <div class="ad" id="ad2"></div>
+
+        <div class="ad" id="ad3"></div>
+    </div>
+</div>
+
+<script src="/static/blog/utils.js"></script>
+</body>
+</html>

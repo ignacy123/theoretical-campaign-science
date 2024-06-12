@@ -24,3 +24,11 @@ CREATE TABLE IF NOT EXISTS clicks (
     ad varchar(32) NOT NULL CHECK (LENGTH(ad) >= 1),
     PRIMARY KEY (username, ad)
 );
+
+
+
+CREATE TABLE IF NOT EXISTS posts (
+    id serial PRIMARY KEY,
+    file_path varchar(64) NOT NULL,
+    title varchar(1024) NOT NULL
+);

@@ -70,7 +70,7 @@ function displayRandomAds() {
         const ad = ads[index];
 
         const a = document.createElement('a');
-        a.href = './ad_click?link=' + encodeURIComponent(ad.url) + '&id=' + encodeURIComponent(ad.id);
+        a.href = './../ad_click?link=' + encodeURIComponent(ad.url) + '&id=' + encodeURIComponent(ad.id);
         a.target = '_blank';
         element.appendChild(a);
 
