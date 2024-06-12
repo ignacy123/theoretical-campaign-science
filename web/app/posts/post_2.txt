@@ -1,26 +1,17 @@
 <h1>Private Set Intersection</h1>
 
-<h2>Example usages</h2>
+<h2>Flavors of PSI</h2>
 
+There are multiple variations of PSI, which can be used to solve different problems:
 <ul>
-    <li><b>Measuring ad efficiency (our use-case)</b>:
-        A car company wants to know which of their clients have at any point clicked an ad the company paid for.
-        The ad-providing company keeps a list of all registered accounts that clicked on ads.
-        PSI allows them to calculate the intersection of those sets of accounts.
-    </li>
-    <li><b>DNA matching</b>:
-        A client wishes to check whether their DNA sequence is related to any diseases.
-        A research facility that stores a list of suspicious sequences wants to keep it private.
-        PSI allows the client to make a query without revealing their entire DNA sequence.
-    </li>
-    <li><b>Password checkup</b>:
-        A client has a list of passwords they use, and the server stores a list of leaked passwords.
-        PSI allows the client to know which passwords are leaked while keeping the rest of them secure.
-    </li>
-    <li><b>Dating preferences</b>:
-        Alice and Bob have a set of their dating preferences.
-        PSI allows them to know what they both expect while keeping the rest of their taste private.
-    </li>
+    <li><b>PSI-cardinality</b> - only the size of the intersection can be learned during the protocol.</li>
+    <li><b>server-client PSI</b> - only the client learns the intersection, while the server learns nothing (this variant is utilized by Apple in password monitoring).</li>
+    <li><b>server-aided PSI</b> - two parties exchange the intersection of their sets with the help of a third-party server.</li>
+    <li><b>threshold PSI</b> - the elements (and the size!) of the intersection cannot be revealed, unless its size exceeds a fixed threshold (this variant is used by Apple for CSAM detection).</li>
+    <li><b>dynamic input PSI</b> - this variant of the protocol is optimized for frequent updates to the sets of one of the sides.</li>
+    <li><b>input consistent PSI</b> - this PSI variant ensures that the input of one of the sides must remain static between different runs of the protocol.</li>
+    <li><b>PSI with enrichment</b> - this variant focuses on performing an exact or approximate join on two private databases.</li>
+    <li><b>PSI with statistical analysis</b> - parties only learn results of a statistical analysis performed on the intersection of their datasets.</li>
 </ul>
 
-<iframe height="550" src="/static/blog/figures/diagram.svg" style="border:none;" width="750"></iframe>
+<img height="500" src="/static/blog/figures/apple.jpg" style="border:none;" width="500"></iframe>
