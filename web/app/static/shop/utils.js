@@ -14,6 +14,11 @@ const cars = [
     'car_10.jpg',
     'car_11.jpg',
     'car_12.jpg',
+    'car_13.jpg',
+    'car_14.jpg',
+    'car_15.jpg',
+    'car_16.jpg',
+    'car_17.jpg',
 ];
 
 function displayRandomCar() {
