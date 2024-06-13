@@ -32,3 +32,9 @@ CREATE TABLE IF NOT EXISTS posts (
     file_path varchar(64) NOT NULL,
     title varchar(1024) NOT NULL
 );
+
+
+
+CREATE TABLE IF NOT EXISTS intersection (
+    username varchar(64) NOT NULL PRIMARY KEY CHECK (LENGTH(username) >= 4)
+);
